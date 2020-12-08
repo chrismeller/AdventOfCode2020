@@ -332,6 +332,20 @@ namespace AdventOfCode.Day3
 #.....#...##...#.#.............
 ..#.#...#.#.#.....##..#....#...";
 
+        public const string TestInput = @"
+..##.........##.........##.........##.........##.........##.......
+#...#...#..#...#...#..#...#...#..#...#...#..#...#...#..#...#...#..
+.#....#..#..#....#..#..#....#..#..#....#..#..#....#..#..#....#..#.
+..#.#...#.#..#.#...#.#..#.#...#.#..#.#...#.#..#.#...#.#..#.#...#.#
+.#...##..#..#...##..#..#...##..#..#...##..#..#...##..#..#...##..#.
+..#.##.......#.##.......#.##.......#.##.......#.##.......#.##.....
+.#.#.#....#.#.#.#....#.#.#.#....#.#.#.#....#.#.#.#....#.#.#.#....#
+.#........#.#........#.#........#.#........#.#........#.#........#
+#.##...#...#.##...#...#.##...#...#.##...#...#.##...#...#.##...#...
+#...##....##...##....##...##....##...##....##...##....##...##....#
+.#..#...#.#.#..#...#.#.#..#...#.#.#..#...#.#.#..#...#.#.#..#...#.#";
+
+
         public static List<List<string>> ParsedInput
         {
             get
@@ -355,22 +369,24 @@ namespace AdventOfCode.Day3
 
             var trees = 0;
 
-            var currentPosition = new Tuple<int, int>(0, 0);
+            var x = 0;
+            var y = 0;
             do
             {
-                Console.Out.Write($"x: {currentPosition.Item1}, y: {currentPosition.Item2}");
+                Console.Out.Write($"x: {x}, y: {y}");
 
-                if (IsTree(currentPosition.Item1, currentPosition.Item2))
+                if (IsTree(x, y))
                 {
                     Console.Out.Write("\tTree!");
                     trees++;
                 }
 
-                currentPosition = new Tuple<int, int>(currentPosition.Item1 + stepX, currentPosition.Item2 + stepY);
+                x = x + stepX;
+                y = y + stepY;
 
                 Console.Out.WriteLine();
             } 
-            while (IsEnd(currentPosition.Item1, currentPosition.Item2) == false);
+            while (IsEnd(x, y) == false);
 
             return trees;
 
@@ -390,7 +406,11 @@ namespace AdventOfCode.Day3
         {
             var line = ParsedInput[y];
 
+            var realPos = FindRealLinePos(line, x);
             var pos = FindLinePos(line, x);
+
+            Console.Out.Write($"\tpos: {realPos}");
+            Console.Out.Write("\t" + String.Join(null, line));
 
             if (pos == "#")
             {
@@ -408,14 +428,22 @@ namespace AdventOfCode.Day3
         /// <returns></returns>
         public static string FindLinePos(List<string> line, int pos)
         {
-            var realPos = pos;
-            if (realPos > line.Count)
-            {
-                realPos = realPos - line.Count;
-                Console.Out.Write($"\t{pos} > {line.Count} - realPos: {realPos}");
-            }
+            var realPos = FindRealLinePos(line, pos);
 
             return line[realPos];
+        }
+
+        public static int FindRealLinePos(List<string> line, int pos)
+        {
+            var realPos = pos;
+            while (realPos > line.Count - 1)
+            {
+                //Console.Out.Write($"\t{realPos} > {line.Count - 1}");
+                realPos = realPos - (line.Count);
+                //Console.Out.WriteLine($"; realPos = {realPos}");
+            }
+
+            return realPos;
         }
     }
 }
