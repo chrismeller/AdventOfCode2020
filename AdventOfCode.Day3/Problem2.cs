@@ -17,7 +17,7 @@ namespace AdventOfCode.Day3
                 new Tuple<int, int>(1, 2),
             };
 
-            var totalTrees = new List<int>();
+            var totalTrees = new List<long>();
             foreach (var step in steps)
             {
                 var stepX = step.Item1;
