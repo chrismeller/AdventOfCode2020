@@ -27,6 +27,9 @@ namespace AdventOfCode.Day5
             // now, filter the available list down to only those seats which we don't have a boarding pass for
             var missingSeats = availableSeats.Where(seat => takenSeats.Any(ts => ts.Row == seat.Row && ts.Column == seat.Column) == false).ToList();
 
+            // we're told that our seat is not the very front or back, so eliminate those two rows
+            missingSeats = missingSeats.Where(seat => seat.Row != 0 && seat.Row != availableSeats.Max(x => x.Row)).ToList();
+
             return 0;
         }
     }
