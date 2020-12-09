@@ -40,7 +40,7 @@ dotted black bags contain no other bags.";
             var bagColor = text.Substring(0, text.IndexOf("bags contain")).Trim();
 
             // the bags this bag can contain is the part after "bags contain"
-            var containsString = text.Substring(text.IndexOf("bags contain") + "bags contain".Length);
+            var containsString = text.Substring(text.IndexOf("bags contain") + "bags contain".Length).Trim();
 
             if (containsString == "no other bags.")
             {
@@ -59,8 +59,16 @@ dotted black bags contain no other bags.";
                 .ToList();
 
             // now split them into the color and number - the color is the key, the number is the value
-            var contains = containsList.ToDictionary(x => x.Substring(x.IndexOf(" ") + 1),
-                x => Convert.ToInt32(x.Substring(0, x.IndexOf(" "))));
+            var contains = containsList.Select(x =>
+            {
+                var count = Convert.ToInt32(x.Substring(0, x.IndexOf(" ")));
+                var color = x.Substring(x.IndexOf(" ") + 1);
+                return new Bag()
+                {
+                    Color = color,
+                    Count = count,
+                };
+            }).ToList();
 
             return new Bag()
             {
@@ -72,7 +80,9 @@ dotted black bags contain no other bags.";
         public class Bag
         {
             public string Color { get; set; }
-            public Dictionary<string, int> ContainsBags { get; set; }
+
+            public int Count { get; set; }
+            public List<Bag> ContainsBags { get; set; }
         }
     }
 }
