@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace AdventOfCode.Day7
 {
@@ -17,19 +18,25 @@ vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.
 faded blue bags contain no other bags.
 dotted black bags contain no other bags.";
 
+        // the answer is 4
+        public const string TestTargetColor = "shiny gold";
+
         public static int Solve()
         {
             var rules = ParseRules(TestInput);
 
-            rules.ForEach(Console.Out.WriteLine);
+            // now that we have all of our bags, let's find out the ones that, nested, could contain the target color
+            var bagsCanContainTarget = rules.Where(x => CanContain(x, TestTargetColor)).ToList();
 
-            return 0;
+            return bagsCanContainTarget.Count;
         }
 
         public static List<Bag> ParseRules(string input)
         {
             var lines = input.Trim().Split("\r\n");
-            return lines.Select(ParseRule).ToList();
+            var bags = lines.Select(ParseRule).ToList();
+
+            return FillBags(bags, bags);
         }
 
         public static Bag ParseRule(string text)
@@ -75,6 +82,53 @@ dotted black bags contain no other bags.";
                 Color = bagColor,
                 ContainsBags = contains,
             };
+        }
+
+        public static List<Bag> FillBags(List<Bag> bags, List<Bag> lookup)
+        {
+            var filledBags = new List<Bag>();
+            foreach (var bag in bags)
+            {
+                // if the bag doesn't contain any bags, it's possible that it actually can't contain anything
+                // but it's also possible that this is a nested dependency that we need to look up from the list
+                if (bag.ContainsBags == null || bag.ContainsBags.Any() == false)
+                {
+                    bag.ContainsBags = lookup.Where(x => x.Color == bag.Color).Select(x => x.ContainsBags).SingleOrDefault();
+                }
+
+                // if there are bags it can contain now, fill them
+                if (bag.ContainsBags != null && bag.ContainsBags.Any())
+                {
+                    bag.ContainsBags = FillBags(bag.ContainsBags, lookup);
+                }
+
+                filledBags.Add(bag);
+            }
+
+            return filledBags;
+        }
+
+        public static bool CanContain(Bag bag, string targetColor)
+        {
+            // if this bag can't contain anything, clearly not
+            if (bag.ContainsBags == null || bag.ContainsBags.Any() == false)
+            {
+                return false;
+            }
+
+            foreach (var contains in bag.ContainsBags)
+            {
+                // if this contained bag is the target color, we're good
+                if (contains.Color == targetColor)
+                {
+                    return true;
+                }
+
+                // otherwise, recurse down
+                return CanContain(contains, targetColor);
+            }
+
+            return false;
         }
 
         public class Bag
