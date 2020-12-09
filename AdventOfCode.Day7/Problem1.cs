@@ -21,7 +21,7 @@ dotted black bags contain no other bags.";
         {
             var rules = ParseRules(TestInput);
 
-            
+            rules.ForEach(Console.Out.WriteLine);
 
             return 0;
         }
@@ -83,6 +83,18 @@ dotted black bags contain no other bags.";
 
             public int Count { get; set; }
             public List<Bag> ContainsBags { get; set; }
+
+            public override string ToString()
+            {
+                var containsStr = "";
+                if (ContainsBags != null)
+                {
+                    var contains = ContainsBags.Select(x => x.ToString());
+                    containsStr = String.Join(", ", contains);
+                }
+
+                return $"{Count}x {Color}: {containsStr}";
+            }
         }
     }
 }
