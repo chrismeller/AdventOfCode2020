@@ -948,6 +948,11 @@ FFBBBBBRRR";
             public int Row { get; set; }
             public int Column { get; set; }
             public int Id => (Row * 8) + Column;
+
+            public override string ToString()
+            {
+                return $"Row {Row}, Column {Column}, ID {Id}";
+            }
         }
     }
 }
