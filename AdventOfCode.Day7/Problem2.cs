@@ -17,7 +17,7 @@ dark violet bags contain no other bags.";
 
         public static int Solve()
         {
-            var rules = Problem1.ParseRules(TestInput);
+            var rules = Problem1.ParseRules(Problem1.Input);
 
             // for this one we only care about shiny gold bags
             var shinyGold = rules.Single(x => x.Color == TestTargetColor);
