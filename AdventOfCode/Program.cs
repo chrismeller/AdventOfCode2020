@@ -25,7 +25,9 @@ namespace AdventOfCode
             //var answer = Day6.Problem2.Solve();
 
             //var answer = Day7.Problem1.Solve();
-            var answer = Day7.Problem2.Solve();
+            //var answer = Day7.Problem2.Solve();
+
+            var answer = Day8.Problem1.Solve();
 
             Console.Out.WriteLine(answer);
         }
