@@ -30,7 +30,13 @@ namespace AdventOfCode.Day5
             // we're told that our seat is not the very front or back, so eliminate those two rows
             missingSeats = missingSeats.Where(seat => seat.Row != 0 && seat.Row != availableSeats.Max(x => x.Row)).ToList();
 
-            return 0;
+            // at this point it's pretty obvious from looking at the list what the answer is, but here goes...
+
+            // we're also told that the ID of our seat +1 and -1 is in the list of taken seats
+            missingSeats = missingSeats.Where(seat =>
+                takenSeats.Any(ts => ts.Id == seat.Id + 1) && takenSeats.Any(ts => ts.Id == seat.Id - 1)).ToList();
+
+            return missingSeats.Select(x => x.Id).Single();
         }
     }
 }
