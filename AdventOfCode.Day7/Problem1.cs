@@ -721,7 +721,10 @@ dotted black bags contain no other bags.";
                 }
 
                 // otherwise, recurse down
-                return CanContain(contains, targetColor);
+                if (CanContain(contains, targetColor))
+                {
+                    return true;
+                }
             }
 
             return false;
